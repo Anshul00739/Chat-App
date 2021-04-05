@@ -18,6 +18,7 @@ export const ProfileProvider = ({ children }) => {
           const data = {
             name,
             createdAt,
+
             uid: authObj.uid,
             email: authObj.email,
           };
