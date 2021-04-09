@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { Alert, Button, Icon, InputGroup, Modal, Uploader } from 'rsuite';
+import { InputGroup, Icon, Modal, Button, Uploader, Alert } from 'rsuite';
 import { useModalState } from '../../../misc/custom-hooks';
 import { storage } from '../../../misc/firebase';
 
@@ -8,7 +8,7 @@ const MAX_FILE_SIZE = 1000 * 1024 * 5;
 
 const AttachmentBtnModal = ({ afterUpload }) => {
   const { chatId } = useParams();
-  const { isOpen, open, close } = useModalState();
+  const { isOpen, close, open } = useModalState();
 
   const [fileList, setFileList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +17,7 @@ const AttachmentBtnModal = ({ afterUpload }) => {
     const filtered = fileArr
       .filter(el => el.blobFile.size <= MAX_FILE_SIZE)
       .slice(0, 5);
+
     setFileList(filtered);
   };
 
@@ -76,10 +77,10 @@ const AttachmentBtnModal = ({ afterUpload }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button block disabled={isLoading} onClick={onUpload}>
-            Send to Chat
+            Send to chat
           </Button>
           <div className="text-right mt-2">
-            <small>* only diles less than 5 MB are allowed</small>
+            <small>* only files less than 5 mb are allowed</small>
           </div>
         </Modal.Footer>
       </Modal>
