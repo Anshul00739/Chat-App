@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { Alert, Icon, Input, InputGroup } from 'rsuite';
+import React, { useState, useCallback } from 'react';
+import { InputGroup, Input, Icon, Alert } from 'rsuite';
 import firebase from 'firebase/app';
 import { useParams } from 'react-router';
 import { useProfile } from '../../../context/profile.context';
 import { database } from '../../../misc/firebase';
 import AttachmentBtnModal from './AttachmentBtnModal';
+import AudioMsgBtn from './AudioMsgBtn';
 
 function assembleMessage(profile, chatId) {
   return {
@@ -32,7 +33,7 @@ const Bottom = () => {
   }, []);
 
   const onSendClick = async () => {
-    if (input.trim === '') {
+    if (input.trim() === '') {
       return;
     }
 
@@ -42,14 +43,17 @@ const Bottom = () => {
     const updates = {};
 
     const messageId = database.ref('messages').push().key;
+
     updates[`/messages/${messageId}`] = msgData;
     updates[`/rooms/${chatId}/lastMessage`] = {
       ...msgData,
       msgId: messageId,
     };
+
     setIsLoading(true);
     try {
       await database.ref().update(updates);
+
       setInput('');
       setIsLoading(false);
     } catch (err) {
@@ -102,12 +106,14 @@ const Bottom = () => {
     <div>
       <InputGroup>
         <AttachmentBtnModal afterUpload={afterUpload} />
+        <AudioMsgBtn afterUpload={afterUpload} />
         <Input
           placeholder="Write a new message here..."
           value={input}
           onChange={onInputChange}
           onKeyDown={onKeyDown}
         />
+
         <InputGroup.Button
           color="blue"
           appearance="primary"
